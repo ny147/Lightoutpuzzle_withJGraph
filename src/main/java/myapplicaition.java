@@ -3,6 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+import java.util.Scanner;
 
 /**
  *
@@ -14,7 +15,10 @@ public class myapplicaition {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        puzzle p = new puzzle();
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Number of row for square grid =  ");
+        int num = scan.nextInt();
+        puzzle p = new puzzle(num);
     }
-    
+
 }

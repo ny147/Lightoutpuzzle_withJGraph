@@ -1,7 +1,9 @@
- /*Siralak    Teekha                 6213133
+
+/*Siralak    Teekha                 6213133
   Weerawich  Wongchatchalikun       6213166
   Korawit    Wisetsuwan 	    6213192*/
 import java.util.*;
+import java.lang.*;
 import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
 import org.jgrapht.graph.DefaultWeightedEdge;
@@ -11,15 +13,38 @@ public class puzzle {
 
     private int depth;
     private List<Integer> answer;
-    private int size = 3;
+    private int size;
     private node nstart;
     protected Graph<Integer, DefaultWeightedEdge> g;
 
-    puzzle() {
-        size = 3;//get size from user
+    puzzle(int n) {
+        size = n;//get size from user
         int[][] start = new int[size][size];
-         ///////////////////// get input from user
-        start[0][0] = 0;
+        Scanner scan = new Scanner(System.in);
+        System.out.printf("Initial states (%d bits, left to right, line by line)", size * size);
+        System.out.println();
+        String str = scan.nextLine();
+        try {
+            //char[] ch = new char[str.length()];
+            ///////////////////// get input from user
+            for (int i = 0; i < size; i++) {
+                for (int j = 0; j < size; j++) {
+                    start[i][j] = str.charAt(i * size + j) - 48;
+                    if (start[i][j] != 0 && start[i][j] != 1) {
+                        throw new Exception("Number error");
+                    }
+                    //  System.out.print(start[i][j]);
+                }
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("can't create initital state please ckeck input amout");
+            System.exit(0);
+        } catch (Exception e) {
+            System.out.println("Input error -> " + e);
+            System.exit(0);
+        }
+
+        /*  start[0][0] = 0; //case 3*3 example
         start[0][1] = 0;
         start[0][2] = 0;
 
@@ -29,17 +54,33 @@ public class puzzle {
 
         start[2][0] = 1;
         start[2][1] = 0;
-        start[2][2] = 1;
-            ///////////////////// get input from user
+        start[2][2] = 1;*/
+        ///////////////////// get input from user
         g = new SimpleWeightedGraph<Integer, DefaultWeightedEdge>(DefaultWeightedEdge.class);
         nstart = new node(start); // input from user
-        System.out.printf("%d", nstart.GetValue());
 
+        System.out.printf("\nBit string  = %s, Decimal ID = %d\n", str, nstart.GetValue());
+        nstart.Printstate();
         /*if(He.compareTo(nstart) == 0)
             System.out.println("hehe boi");*/
         //Printstate(ValueToMatrix(344));
         answer = BFS();
         printAns();
+        if (depth <= (size * size)) {
+            System.out.print("      "); // 6 char
+            for (int i = 0; i < size; i++) {
+                System.out.printf("| col %d ", i);
+            }
+            System.out.println();
+            for (int i = 0; i < size; i++) {
+                System.out.printf("row %d ", i);
+                for (int j = 0; j < size; j++) {
+                    System.out.printf("|   0   ");
+
+                }
+                System.out.println("");
+            }
+        }
 
     }
 
@@ -51,13 +92,23 @@ public class puzzle {
         ArrayList<Integer> checkpath = new ArrayList<Integer>();
         node temp_node;
         int value = -2;
-
+        System.out.println("Please wait a minute some states have more time to find solution...");
         while (!Q.isEmpty()) {
 
             temp_node = Q.pollFirst();
             value = temp_node.GetValue();
-            System.out.println("check value " + value);
-            if (value == 0) {
+            //System.out.println("check value " + value);
+            if (depth > (size * size)) {
+
+                System.out.println("This state is no solution");
+                System.exit(0);
+
+            } else if (value == -1) {
+                //System.out.println("check depth " + depth);
+                depth++;
+
+                Q.add(temp_node);
+            } else if (value == 0) {
                 /* answer.add(temp_node);
                 while (temp_node.GetPreviousNode() != null) {
                     node previous = temp_node.GetPreviousNode();
@@ -68,15 +119,12 @@ public class puzzle {
                     //System.out.println("");
                 }*/
 
-                System.out.println("find the goal " + depth);
-                break;
-            } else if (value == -1) {
-                depth++;
-
-                Q.add(temp_node);
-            } else if (depth > (size * size)) {
-
-                System.out.println("this state is no solution");
+                System.out.println(depth + " moves to turn off all light");
+                if(depth ==0){
+                    System.out.println("Initial states has turn off all light");
+                    System.exit(0);
+                }
+                System.out.println("\nStart");
                 break;
 
             } else {
@@ -89,7 +137,7 @@ public class puzzle {
                         if (!checkpath.contains(temp)) {
                             checkpath.add(temp);
                             // count++;
-                           
+
                             Graphs.addEdgeWithVertices(g, value, temp, 1);
                             Q.add(newnode);
                         }
@@ -100,9 +148,9 @@ public class puzzle {
             }
 
         }
-        System.out.println("finish");
+        //System.out.println("finish");
         Mygraph solution = new Mygraph(g);
-        return solution.testShortestPath( nstart.GetValue(),0);
+        return solution.testShortestPath(nstart.GetValue(), 0);
 
         //answer.addAll(solution.testShortestPath());
     }
@@ -161,14 +209,14 @@ public class puzzle {
         return -1;
     }
 
- 
     public void printAns() {
 
-        for (int i = 0; i < answer.size()-1; i++) {
+        for (int i = 0; i < answer.size() - 1; i++) {
             node A = new node(answer.get(i), size);
             node B = new node(answer.get(i + 1), size);
-            System.out.println(Findtoggle(A,B));
             A.Printstate();
+            System.out.println(">>> move " + (i + 1) + " : " + Findtoggle(A, B));
+            // A.PrintStr();
 
         }
     }
@@ -179,14 +227,14 @@ public class puzzle {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 if (state_A[i][j] != state_B[i][j]) {
-                    
-                    int value = new node(toggle(A,i,j)).GetValue();
-                    if(value == B.GetValue()){
-                        String toggle = "Row "  + String.valueOf(i) + "Colum" + String.valueOf(j);
-                    return toggle;
-                    
+
+                    int value = new node(toggle(A, i, j)).GetValue();
+                    if (value == B.GetValue()) {
+                        String toggle = "Row " + String.valueOf(i) + " Colum " + String.valueOf(j);
+                        return toggle;
+
                     }
-                        
+
                 }
 
             }

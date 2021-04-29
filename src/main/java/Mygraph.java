@@ -72,7 +72,7 @@ public class Mygraph {
             if (negcycle) return null;
             if (shpath.getPath(key1, key2) != null)
             {
-                System.out.printf("\nTotal edges = %d\n", shpath.getPath(key1, key2).getLength());
+                //System.out.printf("\nTotal edges = %d\n", shpath.getPath(key1, key2).getLength());
                 List<Integer> allNodes = shpath.getPath(key1, key2).getVertexList();
               
                 return allNodes;
