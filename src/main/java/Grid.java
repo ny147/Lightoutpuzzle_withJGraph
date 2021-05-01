@@ -2,14 +2,14 @@
 /*Siralak    Teekha                 6213133
   Weerawich  Wongchatchalikun       6213166
   Korawit    Wisetsuwan 	    6213192*/
-public class node {
+public class Grid {
 
     private int[][] state;
     private int value;
     private int size;
     private int[] str;
 
-    node(int[][] a) {
+    Grid(int[][] a) {
         size = a.length;
         state = new int[size][size];
         state = a;
@@ -17,7 +17,7 @@ public class node {
 
     }
 
-    node(int v, int s) {
+    Grid(int v, int s) {
         value = v;
         size = s;
         state = new int[size][size];
@@ -25,7 +25,7 @@ public class node {
         ValueToMatrix();
     }
 
-    node() {
+    Grid() {
         value = -1;
 
     }

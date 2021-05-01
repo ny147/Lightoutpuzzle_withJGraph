@@ -14,7 +14,7 @@ public class puzzle {
     private int depth;
     private List<Integer> answer;
     private int size;
-    private node nstart;
+    private Grid nstart;
     protected Graph<Integer, DefaultWeightedEdge> g;
 
     puzzle(int n) {
@@ -24,26 +24,33 @@ public class puzzle {
         System.out.printf("Initial states (%d bits, left to right, line by line)", size * size);
         System.out.println();
         String str = scan.nextLine();
-        try {
-            //char[] ch = new char[str.length()];
-            ///////////////////// get input from user
-            for (int i = 0; i < size; i++) {
-                for (int j = 0; j < size; j++) {
-                    start[i][j] = str.charAt(i * size + j) - 48;
-                    if (start[i][j] != 0 && start[i][j] != 1) {
-                        throw new Exception("Number error");
-                    }
-                    //  System.out.print(start[i][j]);
+        while (true) {
+            try {
+                //char[] ch = new char[str.length()];
+                ///////////////////// get input from user
+                if (str.length() != size * size) {
+                    throw new Exception("String size error ");
                 }
+                for (int i = 0; i < size; i++) {
+                    for (int j = 0; j < size; j++) {
+                        start[i][j] = str.charAt(i * size + j) - 48;
+                        if (start[i][j] != 0 && start[i][j] != 1) {
+                            throw new Exception("Number error");
+                        }
+                        //  System.out.print(start[i][j]);
+                    }
+                }
+                break;
+            } catch (ArrayIndexOutOfBoundsException e) {
+                System.out.println("can't create initital state please ckeck input amout");
+                //System.exit(0);
+                str = scan.nextLine();
+            } catch (Exception e) {
+                System.out.println("Input error -> " + e + "please input again");
+                // System.exit(0);
+                str = scan.nextLine();
             }
-        } catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("can't create initital state please ckeck input amout");
-            System.exit(0);
-        } catch (Exception e) {
-            System.out.println("Input error -> " + e);
-            System.exit(0);
         }
-
         /*  start[0][0] = 0; //case 3*3 example
         start[0][1] = 0;
         start[0][2] = 0;
@@ -57,7 +64,7 @@ public class puzzle {
         start[2][2] = 1;*/
         ///////////////////// get input from user
         g = new SimpleWeightedGraph<Integer, DefaultWeightedEdge>(DefaultWeightedEdge.class);
-        nstart = new node(start); // input from user
+        nstart = new Grid(start); // input from user
 
         System.out.printf("\nBit string  = %s, Decimal ID = %d\n", str, nstart.GetValue());
         nstart.Printstate();
@@ -81,16 +88,17 @@ public class puzzle {
                 System.out.println("");
             }
         }
+        System.out.println("Puzzle finish\nback to start\n");
 
     }
 
     public List<Integer> BFS() {
-        node Nopath = new node(); // node that has -1 value for check
-        ArrayDeque<node> Q = new ArrayDeque<node>();
+        Grid Nopath = new Grid(); // Grid that has -1 value for check
+        ArrayDeque<Grid> Q = new ArrayDeque<Grid>();
         Q.add(nstart);
         Q.add(Nopath);
         ArrayList<Integer> checkpath = new ArrayList<Integer>();
-        node temp_node;
+        Grid temp_node;
         int value = -2;
         System.out.println("Please wait a minute some states have more time to find solution...");
         while (!Q.isEmpty()) {
@@ -111,7 +119,7 @@ public class puzzle {
             } else if (value == 0) {
                 /* answer.add(temp_node);
                 while (temp_node.GetPreviousNode() != null) {
-                    node previous = temp_node.GetPreviousNode();
+                    Grid previous = temp_node.GetPreviousNode();
                     answer.add(previous);
 
                     // previous.print();
@@ -120,7 +128,7 @@ public class puzzle {
                 }*/
 
                 System.out.println(depth + " moves to turn off all light");
-                if(depth ==0){
+                if (depth == 0) {
                     System.out.println("Initial states has turn off all light");
                     System.exit(0);
                 }
@@ -132,7 +140,7 @@ public class puzzle {
 
                     for (int j = 0; j < size; j++) {
                         int[][] st = toggle(temp_node, i, j);
-                        node newnode = new node(st);
+                        Grid newnode = new Grid(st);
                         int temp = newnode.GetValue();
                         if (!checkpath.contains(temp)) {
                             checkpath.add(temp);
@@ -168,7 +176,7 @@ public class puzzle {
         return res;
     }
 
-    public int[][] toggle(node x, int i, int j) {
+    public int[][] toggle(Grid x, int i, int j) {
 
         int[][] newstate = new int[size][size];
         newstate = deepCopy(x.GetState());
@@ -212,8 +220,8 @@ public class puzzle {
     public void printAns() {
 
         for (int i = 0; i < answer.size() - 1; i++) {
-            node A = new node(answer.get(i), size);
-            node B = new node(answer.get(i + 1), size);
+            Grid A = new Grid(answer.get(i), size);
+            Grid B = new Grid(answer.get(i + 1), size);
             A.Printstate();
             System.out.println(">>> move " + (i + 1) + " : " + Findtoggle(A, B));
             // A.PrintStr();
@@ -221,14 +229,14 @@ public class puzzle {
         }
     }
 
-    public String Findtoggle(node A, node B) {
+    public String Findtoggle(Grid A, Grid B) {
         int state_A[][] = A.GetState();
         int state_B[][] = B.GetState();
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 if (state_A[i][j] != state_B[i][j]) {
 
-                    int value = new node(toggle(A, i, j)).GetValue();
+                    int value = new Grid(toggle(A, i, j)).GetValue();
                     if (value == B.GetValue()) {
                         String toggle = "Row " + String.valueOf(i) + " Colum " + String.valueOf(j);
                         return toggle;
