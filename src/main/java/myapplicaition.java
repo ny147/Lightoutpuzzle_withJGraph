@@ -33,9 +33,8 @@ public class myapplicaition {
                 switch (choice) {
 
                     case "1":
-                        Scanner scan = new Scanner(System.in);
-                        System.out.println("Number of row for square grid =  ");
-                        int num = scan.nextInt();
+                        //System.out.println("Number of row for square grid =  ");
+                        int num = InputSize();
                         puzzle p = new puzzle(num);
                         break;
 
@@ -71,5 +70,29 @@ public class myapplicaition {
         System.out.println("  all the lights off.");
         System.out.printf("\n     you can play it on http://daattali.com/shiny/lightsout/  \n");
         System.out.printf("=================================================================\n");
+    }
+
+    public static int InputSize() {
+        Scanner scan = new Scanner(System.in);
+        int size;
+        while (true) {
+            try {
+                System.out.println("Number of row for square grid =  ");
+                size = Integer.parseInt(scan.nextLine());
+                if (size == 3 || size == 4 || size == 5) {
+                    //loop = false;
+                    break;
+                } else {
+                    //System.out.println("Please input size again: size must be 3, 4 ,5");
+                    throw new Exception();
+                }
+            } catch (Exception e) {
+                System.out.println(e);
+                System.out.println("Please input size again: size must be 3, 4 ,5");
+
+            }
+
+        }
+        return size;
     }
 }

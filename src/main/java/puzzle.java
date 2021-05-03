@@ -88,7 +88,8 @@ public class puzzle {
                 System.out.println("");
             }
         }
-        System.out.println("Puzzle finish\nback to start\n");
+        System.out.println("Puzzle finish\nThx to play\n");
+        System.exit(0);
 
     }
 
