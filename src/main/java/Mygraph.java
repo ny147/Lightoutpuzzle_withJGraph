@@ -4,12 +4,8 @@
 import java.util.*;
 import org.jgrapht.*;
 import org.jgrapht.graph.*;
-import org.jgrapht.alg.connectivity.*;
 import org.jgrapht.alg.interfaces.ShortestPathAlgorithm;
-import org.jgrapht.alg.shortestpath.BellmanFordShortestPath;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
-import org.jgrapht.alg.shortestpath.NegativeCycleDetectedException;
-import org.jgrapht.alg.spanning.*;
 public class Mygraph {
     
     
@@ -19,28 +15,11 @@ public class Mygraph {
         G = temp;
 
     }
-    public void printGraph()
-    {
-	Set<DefaultWeightedEdge> allEdges = G.edgeSet();
-	printDefaultWeightedEdges(allEdges);
-    }
+   
 
-    public void printDefaultWeightedEdges(Collection<DefaultWeightedEdge> E)
-    {
-	for (DefaultWeightedEdge e : E)
-        {
-	
-            
-            int source = G.getEdgeSource(e);
-            int target = G.getEdgeTarget(e);
-           // double weight = G.getEdgeWeight(e);
-            System.out.printf("%18d - %18d    \n", source ,target);
-
- 
-        }
-    }
+  
     
-    public List<Integer> testShortestPath(int key1 ,int key2)
+    public List<Integer> FindShortestPath(int key1 ,int key2)
     {
 	
 
@@ -48,28 +27,15 @@ public class Mygraph {
 	if (G.containsVertex(key1) && G.containsVertex(key2))
 	{
             ShortestPathAlgorithm<Integer, DefaultWeightedEdge> shpath = null;
-            boolean negweight = false;
-            boolean negcycle  = false;
             
             try // Error if negative weight exists
             {
                 shpath = new DijkstraShortestPath<>(G);
                 shpath.getPath(key1, key2);                   // dummy instruction to check exception
             }
-            catch(IllegalArgumentException e) { System.out.println(e); negweight = true; }
+            catch(IllegalArgumentException e) { System.out.println(e); }
             
-            if (negweight)
-            {
-                try // Error (from BellmanFord) if negative cycle exists
-                {
-                    shpath = new BellmanFordShortestPath<>(G);
-                    //shpath = new FloydWarshallShortestPaths<>(G);  
-                    shpath.getPath(key1, key2);               // dummy instruction to check exception
-                }
-                catch(NegativeCycleDetectedException e) { System.out.println(e); negcycle = true; }
-            }
-           
-            if (negcycle) return null;
+            
             if (shpath.getPath(key1, key2) != null)
             {
                 //System.out.printf("\nTotal edges = %d\n", shpath.getPath(key1, key2).getLength());
@@ -85,5 +51,6 @@ public class Mygraph {
         public Graph<Integer, DefaultWeightedEdge> getG(){
         return G;
      }
-        
+    
+    
 }

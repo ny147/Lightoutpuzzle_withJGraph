@@ -35,7 +35,7 @@ public class Grid {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 state[i][j] = value_to_matrix % 2;
-                // System.out.println(i + " "+j);
+                
                 str[(i * size) + j] = state[i][j];
                 value_to_matrix = value_to_matrix / 2;
             }
@@ -83,11 +83,5 @@ public class Grid {
         return state;
     }
 
-   /* public void PrintStr() {
-        for (int i = 0; i < str.length; i++) {
-            System.out.print(str[i]);
-        }
-        System.out.println();
-    }*/
 
 }

@@ -13,12 +13,13 @@ public class puzzle {
 
     private int depth;
     private List<Integer> answer;
+ 
     private int size;
     private Grid nstart;
-    protected Graph<Integer, DefaultWeightedEdge> g;
+    private Graph<Integer, DefaultWeightedEdge> g;
 
     puzzle(int n) {
-        size = n;//get size from user
+        size = n;
         int[][] start = new int[size][size];
         Scanner scan = new Scanner(System.in);
         System.out.printf("Initial states (%d bits, left to right, line by line)", size * size);
@@ -26,8 +27,7 @@ public class puzzle {
         String str = scan.nextLine();
         while (true) {
             try {
-                //char[] ch = new char[str.length()];
-                ///////////////////// get input from user
+                
                 if (str.length() != size * size) {
                     throw new Exception("String size error ");
                 }
@@ -37,41 +37,29 @@ public class puzzle {
                         if (start[i][j] != 0 && start[i][j] != 1) {
                             throw new Exception("Number error");
                         }
-                        //  System.out.print(start[i][j]);
+                       
                     }
                 }
                 break;
             } catch (ArrayIndexOutOfBoundsException e) {
                 System.out.println("can't create initital state please ckeck input amout");
-                //System.exit(0);
+           
                 str = scan.nextLine();
             } catch (Exception e) {
                 System.out.println("Input error -> " + e + "please input again");
-                // System.exit(0);
+                
                 str = scan.nextLine();
             }
         }
-        /*  start[0][0] = 0; //case 3*3 example
-        start[0][1] = 0;
-        start[0][2] = 0;
 
-        start[1][0] = 1;
-        start[1][1] = 1;
-        start[1][2] = 0;
-
-        start[2][0] = 1;
-        start[2][1] = 0;
-        start[2][2] = 1;*/
-        ///////////////////// get input from user
         g = new SimpleWeightedGraph<Integer, DefaultWeightedEdge>(DefaultWeightedEdge.class);
         nstart = new Grid(start); // input from user
 
         System.out.printf("\nBit string  = %s, Decimal ID = %d\n", str, nstart.GetValue());
         nstart.Printstate();
-        /*if(He.compareTo(nstart) == 0)
-            System.out.println("hehe boi");*/
-        //Printstate(ValueToMatrix(344));
+       
         answer = BFS();
+        if(answer != null)
         printAns();
         if (depth <= (size * size)) {
             System.out.print("      "); // 6 char
@@ -89,7 +77,7 @@ public class puzzle {
             }
         }
         System.out.println("Puzzle finish\nThx to play\n");
-        System.exit(0);
+        
 
     }
 
@@ -103,30 +91,24 @@ public class puzzle {
         int value = -2;
         System.out.println("Please wait a minute some states have more time to find solution...");
         while (!Q.isEmpty()) {
-
+         
             temp_node = Q.pollFirst();
             value = temp_node.GetValue();
-            //System.out.println("check value " + value);
+             
             if (depth > (size * size)) {
-
+               
                 System.out.println("This state is no solution");
-                System.exit(0);
+              
+                return null;
+                //System.exit(0);
 
             } else if (value == -1) {
-                //System.out.println("check depth " + depth);
+               
                 depth++;
 
                 Q.add(temp_node);
             } else if (value == 0) {
-                /* answer.add(temp_node);
-                while (temp_node.GetPreviousNode() != null) {
-                    Grid previous = temp_node.GetPreviousNode();
-                    answer.add(previous);
-
-                    // previous.print();
-                    temp_node = previous;
-                    //System.out.println("");
-                }*/
+                
 
                 System.out.println(depth + " moves to turn off all light");
                 if (depth == 0) {
@@ -145,7 +127,7 @@ public class puzzle {
                         int temp = newnode.GetValue();
                         if (!checkpath.contains(temp)) {
                             checkpath.add(temp);
-                            // count++;
+                         
 
                             Graphs.addEdgeWithVertices(g, value, temp, 1);
                             Q.add(newnode);
@@ -157,14 +139,15 @@ public class puzzle {
             }
 
         }
-        //System.out.println("finish");
+        
         Mygraph solution = new Mygraph(g);
-        return solution.testShortestPath(nstart.GetValue(), 0);
+      
+        return solution.FindShortestPath(nstart.GetValue(), 0);
 
-        //answer.addAll(solution.testShortestPath());
+        
     }
 
-    public static int[][] deepCopy(int[][] org) {
+    public  int[][] deepCopy(int[][] org) {
         if (org == null) {
             return null;
         }
@@ -183,7 +166,7 @@ public class puzzle {
         newstate = deepCopy(x.GetState());
         int c1 = 0;
         int c2 = 0;
-        //c1 = newstate[][]
+        
         newstate[i][j] = togglebit(newstate[i][j]);
 
         if (i + 1 < size) {
@@ -225,7 +208,7 @@ public class puzzle {
             Grid B = new Grid(answer.get(i + 1), size);
             A.Printstate();
             System.out.println(">>> move " + (i + 1) + " : " + Findtoggle(A, B));
-            // A.PrintStr();
+           
 
         }
     }

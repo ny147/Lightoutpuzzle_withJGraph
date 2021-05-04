@@ -1,19 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+ /*Siralak    Teekha                 6213133
+  Weerawich  Wongchatchalikun       6213166
+  Korawit    Wisetsuwan 	    6213192*/
 import java.util.Scanner;
 
-/**
- *
- * @author Nearu
- */
 public class myapplicaition {
 
-    /**
-     * @param args the command line arguments
-     */
+  
     public static void main(String[] args) {
         System.out.println("Welcome to Lightout puzzle solve program ");
         menu();
@@ -33,7 +25,7 @@ public class myapplicaition {
                 switch (choice) {
 
                     case "1":
-                        //System.out.println("Number of row for square grid =  ");
+                      
                         int num = InputSize();
                         puzzle p = new puzzle(num);
                         break;
@@ -80,10 +72,10 @@ public class myapplicaition {
                 System.out.println("Number of row for square grid =  ");
                 size = Integer.parseInt(scan.nextLine());
                 if (size == 3 || size == 4 || size == 5) {
-                    //loop = false;
+               
                     break;
                 } else {
-                    //System.out.println("Please input size again: size must be 3, 4 ,5");
+                 
                     throw new Exception();
                 }
             } catch (Exception e) {
